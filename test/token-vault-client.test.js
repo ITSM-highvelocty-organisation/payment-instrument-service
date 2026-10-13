@@ -21,3 +21,10 @@ test('reports no billing country for wallet methods', () => {
   assert.equal(client.getBillingCountry('applePay'), null);
   assert.equal(client.getBillingCountry('savedCard'), 'US');
 });
+
+test('returns google pay wallet metadata without billing data', () => {
+  const method = new TokenVaultClient().getPaymentMethod('googlePay');
+  assert.equal(method.network, 'MASTERCARD');
+  assert.equal(method.lastFour, '4444');
+  assert.equal(method.billingAddress, null);
+});
