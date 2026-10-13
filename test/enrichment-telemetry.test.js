@@ -23,3 +23,10 @@ test('tags enrichment events with the merchant segment', () => {
   assert.equal(segmentFor('m_42'), 'standard');
   assert.equal(segmentFor(undefined), 'unknown');
 });
+
+test('classifies enrichment failure reasons', () => {
+  const reasonFor = (error) => recordEnrichmentOutcome({paymentMethod: {instrumentType: 'APPLE_PAY', network: 'VISA'}, enrichedInstrument: null, error, latencyMs: 31}).failureReason;
+  assert.equal(reasonFor(new TypeError("Cannot read properties of null (reading 'countryCode')")), 'contract_violation');
+  assert.equal(reasonFor(new Error('upstream timeout')), 'dependency_timeout');
+  assert.equal(reasonFor(null), null);
+});
