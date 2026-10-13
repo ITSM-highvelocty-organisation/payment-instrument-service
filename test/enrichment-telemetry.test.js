@@ -16,3 +16,10 @@ test('buckets enrichment latency for alerting', () => {
   assert.equal(bucketFor(640), 'slow');
   assert.equal(bucketFor(4200), 'critical');
 });
+
+test('tags enrichment events with the merchant segment', () => {
+  const segmentFor = (merchantId) => recordEnrichmentOutcome({paymentMethod: {instrumentType: 'CARD', network: 'VISA'}, enrichedInstrument: {billingCountry: 'US'}, error: null, latencyMs: 18, merchantId}).merchantSegment;
+  assert.equal(segmentFor('ent_42'), 'enterprise');
+  assert.equal(segmentFor('m_42'), 'standard');
+  assert.equal(segmentFor(undefined), 'unknown');
+});
