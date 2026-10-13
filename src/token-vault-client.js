@@ -10,4 +10,8 @@ export class TokenVaultClient {
     if (!method) throw new Error('PAYMENT_METHOD_NOT_FOUND');
     return structuredClone(method);
   }
+
+  getBillingCountry(token) {
+    return this.getPaymentMethod(token).billingAddress?.countryCode ?? null;
+  }
 }

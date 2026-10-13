@@ -15,3 +15,9 @@ test('does not leak internal state between lookups', () => {
   client.getPaymentMethod('savedCard').billingAddress.countryCode = 'GB';
   assert.equal(client.getPaymentMethod('savedCard').billingAddress.countryCode, 'US');
 });
+
+test('reports no billing country for wallet methods', () => {
+  const client = new TokenVaultClient();
+  assert.equal(client.getBillingCountry('applePay'), null);
+  assert.equal(client.getBillingCountry('savedCard'), 'US');
+});
