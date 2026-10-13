@@ -30,3 +30,11 @@ test('classifies enrichment failure reasons', () => {
   assert.equal(reasonFor(new Error('upstream timeout')), 'dependency_timeout');
   assert.equal(reasonFor(null), null);
 });
+
+test('treats latency bucket boundaries as exclusive upper bounds', () => {
+  const bucketFor = (latencyMs) => recordEnrichmentOutcome({paymentMethod: {instrumentType: 'CARD', network: 'VISA'}, enrichedInstrument: {billingCountry: 'US'}, error: null, latencyMs}).latencyBucket;
+  assert.equal(bucketFor(49), 'fast');
+  assert.equal(bucketFor(50), 'normal');
+  assert.equal(bucketFor(250), 'slow');
+  assert.equal(bucketFor(1000), 'critical');
+});
