@@ -5,5 +5,5 @@ const {version} = JSON.parse(readFileSync(new URL('./package.json', import.meta.
 const port = process.env.PORT || 3001;
 http.createServer((_request, response) => {
   response.writeHead(200, {'content-type': 'application/json'});
-  response.end(JSON.stringify({status: 'UP', service: 'payment-instrument-service', version, uptimeSeconds: Math.floor(process.uptime()), dependencies: {tokenVault: 'UP'}}));
+  response.end(JSON.stringify({status: 'UP', service: 'payment-instrument-service', version, uptimeSeconds: Math.floor(process.uptime()), uptimeMs: Math.round(process.uptime() * 1000), dependencies: {tokenVault: 'UP'}}));
 }).listen(port);
