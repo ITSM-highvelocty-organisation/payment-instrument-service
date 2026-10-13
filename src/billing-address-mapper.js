@@ -1,3 +1,5 @@
+import {normalizeCountryCode} from './country-code.js';
+
 export function mapBillingAddress(billingAddress) {
-  return billingAddress ? {countryCode: billingAddress.countryCode?.toUpperCase() ?? null} : null;
+  return billingAddress ? {countryCode: normalizeCountryCode(billingAddress.countryCode)} : null;
 }
