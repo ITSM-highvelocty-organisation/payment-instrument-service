@@ -4,6 +4,11 @@ function toLatencyBucket(latencyMs) {
   return latencyBuckets.find(([upperBoundMs]) => latencyMs < upperBoundMs)?.[1] ?? 'critical';
 }
 
-export function recordEnrichmentOutcome({paymentMethod, enrichedInstrument, error, latencyMs}) {
-  return {event: 'instrument.enrichment.outcome', instrumentType: paymentMethod.instrumentType, network: paymentMethod.network, billingCountry: enrichedInstrument?.billingCountry ?? null, billingCountryAvailable: Boolean(enrichedInstrument?.billingCountry), exceptionClass: error?.constructor?.name ?? null, failure: error ? 1 : 0, latencyMs, latencyBucket: toLatencyBucket(latencyMs)};
+function toMerchantSegment(merchantId) {
+  if (!merchantId) return 'unknown';
+  return merchantId.startsWith('ent_') ? 'enterprise' : 'standard';
+}
+
+export function recordEnrichmentOutcome({paymentMethod, enrichedInstrument, error, latencyMs, merchantId}) {
+  return {event: 'instrument.enrichment.outcome', instrumentType: paymentMethod.instrumentType, network: paymentMethod.network, merchantSegment: toMerchantSegment(merchantId), billingCountry: enrichedInstrument?.billingCountry ?? null, billingCountryAvailable: Boolean(enrichedInstrument?.billingCountry), exceptionClass: error?.constructor?.name ?? null, failure: error ? 1 : 0, latencyMs, latencyBucket: toLatencyBucket(latencyMs)};
 }
